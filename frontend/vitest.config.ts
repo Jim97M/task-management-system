@@ -8,4 +8,3 @@ export default defineConfig({
     setupFiles: './src/__tests__/setupTests.ts',
   },
 });
-

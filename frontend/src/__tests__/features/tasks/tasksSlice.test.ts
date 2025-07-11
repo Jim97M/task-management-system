@@ -1,5 +1,5 @@
 
-import tasksReducer, { addTask, updateTask, deleteTask, moveTask, setFilter } from '../../../features/tasks/tasksSlice';
+import tasksReducer, { updateTask, deleteTask, moveTask, setFilter } from '../../../features/tasks/tasksSlice';
 import type { Task } from '../../../features/tasks/tasksTypes';
 
 const initialState = {
@@ -10,7 +10,6 @@ const initialState = {
     assignee: null,
   },
 };
-
 
 
 describe('tasksSlice', () => {

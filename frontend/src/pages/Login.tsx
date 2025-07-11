@@ -19,9 +19,7 @@ const Login = () => {
   } | null>(null);
 
   const handleSubmit = async (credentials: { email: string; password: string }) => {
-    setError(''); // Reset error on new submission
-    
-    // Client-side validation
+    setError('');
     if (!credentials.email || !credentials.password) {
       setError('Email and password are required');
       return;

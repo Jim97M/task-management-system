@@ -1,4 +1,3 @@
-// __tests__/features/auth/authApi.test.ts
 import { setupServer } from 'msw/node';
 import { http, HttpResponse } from 'msw';
 import { configureStore } from '@reduxjs/toolkit';

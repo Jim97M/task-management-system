@@ -50,5 +50,53 @@ A modern, full-stack **Task Management Tool** built with **Spring Boot**, **Post
 ### 📁 Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/task-management-system.git
-cd task-management-system
+  git clone https://github.com/yourusername/task-management-system.git
+  cd task-management-system
+
+---
+
+### ▶️ Running the Backend
+
+
+1. Navigate To Backend Directory
+
+cd backend
+
+2. Configure The Database Credentials.
+
+    Create a PostgreSQL database:
+      QUERY: CREATE DATABASE task_management_system;
+
+      THEN:
+      QUERY: GRANT ALL PRIVILEGES ON DATABASE task_management_system TO postgres;
+
+3. Configure the database credentials
+E   
+   Edit the file at src/main/resources/application.properties:
+
+   spring.datasource.url=jdbc:postgresql://localhost:5432/taskdb
+   spring.datasource.username=your_db_username
+   spring.datasource.password=your_db_password
+   spring.jpa.hibernate.ddl-auto=update
+
+ 
+4. Run the backend server
+
+   ./mvnw spring-boot:run
+
+
+▶️ Running the Frontend
+
+
+1. Navigate To Backend Directory
+
+cd ../frontend
+
+2. Install Dependencies.
+
+  npm install
+
+3. Run Frontend Script
+
+  npm run dev
+

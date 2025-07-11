@@ -9,12 +9,12 @@ export const store = configureStore({
     auth: authReducer,
     tasks: tasksReducer,
     [authApi.reducerPath]: authApi.reducer,
-    [tasksApi.reducerPath]: tasksApi.reducer, // Add tasks API reducer
+    [tasksApi.reducerPath]: tasksApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
       .concat(authApi.middleware)
-      .concat(tasksApi.middleware), // Add tasks API middleware
+      .concat(tasksApi.middleware),
 });
 
 export  type RootState = ReturnType<typeof store.getState>;

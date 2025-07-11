@@ -1,4 +1,3 @@
-// components/auth/AuthForm.tsx
 import React, { useState } from 'react';
 import FormInput from './FormInput';
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash, FaUser } from 'react-icons/fa';
