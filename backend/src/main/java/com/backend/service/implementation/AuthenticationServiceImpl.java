@@ -150,7 +150,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .map(GrantedAuthority::getAuthority)
                     .collect(Collectors.toList());
 
-            return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(jwt, userDetails.getId(), userDetails.getEmail(), userDetails.getUsername(), roles));
+            return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(jwt, userDetails.getId(), userDetails.getEmail(), roles));
 
         }
 

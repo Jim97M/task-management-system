@@ -2,6 +2,27 @@
 
 A modern, full-stack **Task Management Tool** built with **Spring Boot**, **PostgreSQL**, **React**, **Tailwind CSS**, **TypeScript**, and **React Router v7**. This application allows users to manage tasks across different statuses (To Do, In Progress, Done), assign users, update task priorities, and organize work visually using drag-and-drop functionality.
 
+### 📌 Register Page
+
+
+<img src="./frontend/src/assets/signup.png" alt="Login Screen Page" width="700"/>
+
+### 📌 Login Page
+
+<img src="./frontend/src/assets/signin.png" alt="Login Screen Page" width="700"/>
+
+### 📌 Dashboard Page
+
+<img src="./frontend/src/assets/dashboard.png" alt="Dashboard Screen Page" width="700"/>
+
+
+<h3>📹 Project Demo Video</h3>
+<p align="center">
+  <a href="./frontend/src/assets/review.mp4" target="_blank">
+    <img src="./frontend/src/assets/dashboard.png" alt="Watch the video" width="700"/>
+  </a>
+</p>
+
 ---
 
 ## 📌 Features
@@ -47,7 +68,8 @@ A modern, full-stack **Task Management Tool** built with **Spring Boot**, **Post
 
 ---
 
-### 📁 Clone the Repository
+### 📁 Setup Block and Instructions Below
+
 
 ```bash
   git clone https://github.com/yourusername/task-management-system.git
@@ -55,7 +77,7 @@ A modern, full-stack **Task Management Tool** built with **Spring Boot**, **Post
 
 ---
 
-### ▶️ Running the Backend
+ ▶️ Running the Backend
 
 
 1. Navigate To Backend Directory
@@ -71,7 +93,7 @@ cd backend
       QUERY: GRANT ALL PRIVILEGES ON DATABASE task_management_system TO postgres;
 
 3. Configure the database credentials
-E   
+   
    Edit the file at src/main/resources/application.properties:
 
    spring.datasource.url=jdbc:postgresql://localhost:5432/taskdb
