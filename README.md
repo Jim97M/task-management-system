@@ -122,3 +122,10 @@ cd ../frontend
 
   npm run dev
 
+
+📝 NOTE
+
+    ✅ The system updates values in real time
+
+    ✅ Includes drag and drop support for task organization
+    
