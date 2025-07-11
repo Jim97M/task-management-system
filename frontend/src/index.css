@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+.ql-container {
+    min-height: 200px;
+    border-radius: 0 0 8px 8px;
+  }
+  
+  .ql-toolbar {
+    border-radius: 8px 8px 0 0;
+    border-color: #e5e7eb !important;
+  }
+  
+  .ql-container {
+    border-color: #e5e7eb !important;
+  }
+
+  .ql-editor {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: 1.5;
+}
+
+.ql-editor strong {
+  font-weight: bold;
+}
+
+.ql-editor em {
+  font-style: italic;
+}
+
+.ql-editor u {
+  text-decoration: underline;
+}
+
+
+/* Custom scrollbar */
+.task-column {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e0 #edf2f7;
+}
+
+.task-column::-webkit-scrollbar {
+  width: 8px;
+}
+
+.task-column::-webkit-scrollbar-track {
+  background: #edf2f7;
+}
+
+.task-column::-webkit-scrollbar-thumb {
+  background-color: #cbd5e0;
+  border-radius: 4px;
+}
+
+/* Smooth drag and drop */
+.task-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.task-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Status colors */
+.status-todo {
+  border-left-color: #4299e1;
+}
+
+.status-in-progress {
+  border-left-color: #f6ad55;
+}
+
+.status-done {
+  border-left-color: #48bb78;
+}
+

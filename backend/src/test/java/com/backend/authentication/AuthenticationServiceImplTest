@@ -1,0 +1,166 @@
+package com.backend.service.implementation;
+
+import com.backend.domain.Authority;
+import com.backend.domain.User;
+import com.backend.payload.request.LoginRequest;
+import com.backend.payload.request.UserRegistrationRequest;
+import com.backend.payload.response.user.JwtResponse;
+import com.backend.repository.AuthorityRepository;
+import com.backend.repository.UserRepository;
+import com.backend.security.jwt.JwtUtils;
+import com.backend.security.service.UserDetailsImpl;
+import com.backend.utils.helpers.RoleAssignment;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+
+import java.util.List;
+import java.util.Set;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
+
+@SpringBootTest
+@ExtendWith(SpringExtension.class)
+@Testcontainers
+public class AuthenticationServiceImplTest {
+
+    @Container
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15")
+            .withDatabaseName("testdb")
+            .withUsername("test")
+            .withPassword("test");
+
+    @DynamicPropertySource
+    static void configure(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgres::getJdbcUrl);
+        registry.add("spring.datasource.username", postgres::getUsername);
+        registry.add("spring.datasource.password", postgres::getPassword);
+        registry.add("spring.jpa.hibernate.ddl-auto", () -> "create-drop");
+    }
+
+    @Autowired
+    private AuthenticationServiceImpl authenticationService;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private AuthorityRepository authorityRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @MockBean
+    private JwtUtils jwtUtils;
+
+    @MockBean
+    private BaseServiceImpl baseService;
+
+    @MockBean
+    private RoleAssignment roleAssignment;
+
+    @MockBean
+    private AuthenticationManager authenticationManager;
+
+    @BeforeEach
+    void setUp() {
+        userRepository.deleteAll();
+        authorityRepository.deleteAll();
+    }
+
+    @Test
+    public void testRegisterUser_success() throws Exception {
+        UserRegistrationRequest request = new UserRegistrationRequest();
+        request.setUsername("testuser");
+        request.setEmail("test@example.com");
+        request.setPassword("password");
+        request.setUserType("USER");
+
+        Authority authority = new Authority();
+        authority.setName("ROLE_USER");
+        authorityRepository.save(authority);
+
+        when(roleAssignment.assignRole(anySet(), eq(authorityRepository)))
+                .thenReturn(Set.of(authority));
+
+        var response = authenticationService.registerUser(request);
+
+        assertThat(response).isNotNull();
+        assertThat(response.getEmail()).isEqualTo("test@example.com");
+        assertThat(userRepository.findByEmail("test@example.com")).isPresent();
+    }
+
+    @Test
+    public void testLoginUser_success() {
+        // Arrange
+        String email = "login@example.com";
+        String password = "password";
+
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setUsername("loginuser");
+        user.setUserType("USER");
+        userRepository.save(user);
+
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.setEmail(email);
+        loginRequest.setPassword(password);
+
+        when(baseService.getUserByEmail(email)).thenReturn(user);
+
+        Authentication mockAuth = mock(Authentication.class);
+        when(mockAuth.getPrincipal()).thenReturn(new UserDetailsImpl(user.getId(), user.getUsername(), user.getEmail(), user.getPassword(), List.of()));
+        when(authenticationManager.authenticate(any())).thenReturn(mockAuth);
+        when(jwtUtils.generateJwtToken(any())).thenReturn("mock-jwt-token");
+
+        // Act
+        ResponseEntity<?> response = authenticationService.loginUser(loginRequest);
+
+        // Assert
+        assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
+        assertThat(response.getBody()).isInstanceOf(JwtResponse.class);
+        JwtResponse jwtResponse = (JwtResponse) response.getBody();
+        assertThat(jwtResponse.getAccessToken()).isEqualTo("mock-jwt-token");
+        assertThat(jwtResponse.getEmail()).isEqualTo(email);
+    }
+
+    @Test
+    public void testLoginUser_wrongPassword() {
+        String email = "fail@example.com";
+        String password = "right-password";
+
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
+
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.setEmail(email);
+        loginRequest.setPassword("wrong-password");
+
+        when(baseService.getUserByEmail(email)).thenReturn(user);
+
+        ResponseEntity<?> response = authenticationService.loginUser(loginRequest);
+
+        assertThat(response.getStatusCode().value()).isEqualTo(401);
+        assertThat(response.getBody()).isEqualTo("Email or Password Is Incorrect");
+    }
+}
+

@@ -1,0 +1,77 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/task_management_system
+    username: ${DATABASE_USERNAME:postgres}
+    password: ${DATABASE_PASSWORD:postgres123}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+
+  jackson:
+    date-format: yyyy-MM-dd
+    serialization:
+      write-dates-as-timestamps: false
+      FAIL_ON_EMPTY_BEANS: false
+
+  sesion:
+    timeout: 1m
+
+  application:
+    name: SALESCRM
+
+server:
+  port: 9003
+  servlet:
+    session:
+      timeout: 5m
+      tracking-modes: cookie
+      cookie:
+        http-only: true
+        secure: false
+        name: JSESSIONID
+        domain: localhost
+        path: /
+        max-age: 600
+        same-site: strict
+
+logging:
+  level:
+    com:
+      settlement:
+        settlement: DEBUG
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+
+token:
+  expiration: 6000000
+  refreshexpiration: 1200000000
+  secret: tmsujjjjj0298u0hksabndjjjpdiayue89qweyquibdashbdapui213hd98qywhhjbdsalhkjsn78697000jk092hdnjkbdsfsj243567ycskhbnjkcsceq0cd8c
+
+custom:
+  max:
+    session: 1
+  exception:
+    message: "Invalid Email or Password"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+      base-path: /actuator
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    tags:
+      application: task-management-system
